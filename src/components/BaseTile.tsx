@@ -1,4 +1,5 @@
 import React from 'react'
+import { COLORS } from '../constants';
 
 interface Props {
     x: number
@@ -6,15 +7,14 @@ interface Props {
 }
 
 const HEIGHT = 0.5;
-const COLOR = '#9395a1'
 
-export default function RockTile(props: Props) {
+export default function BaseTile(props: Props) {
     const { x, z } = props
 
     return (
         <mesh position={[x, HEIGHT / 2, z]}>
             <boxGeometry args={[1, HEIGHT, 1]} />
-            <meshPhongMaterial color={COLOR} />
+            <meshPhongMaterial color={COLORS.BASE_COLOR} />
         </mesh>
     )
 }

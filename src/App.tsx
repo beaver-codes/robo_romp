@@ -1,23 +1,22 @@
 import { Canvas } from '@react-three/fiber';
 import "./App.css"
-import { Environment, OrbitControls } from '@react-three/drei'
+import { Environment } from '@react-three/drei'
 import Floor from './components/Floor';
+import Lights from './Lights';
+import DevHelpers from './DevHelpers';
 
 
 
 const App = () => {
   return (
-    <Canvas >
+    <Canvas camera={{ position: [2.5, 3, 7] }}>
       <Environment preset="studio" background />
 
-      <directionalLight position={[0, 10, 4]} intensity={1} />
-      <ambientLight intensity={0.1} />
+      <Lights />
 
       <Floor />
 
-      <OrbitControls />
-      <gridHelper />
-      <axesHelper />
+      <DevHelpers />
     </Canvas>
   );
 };

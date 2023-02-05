@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import Coordinates from "../models/Coordinates";
 import GameState from "../models/GameState";
 
 interface GameStateContext {
@@ -6,15 +7,22 @@ interface GameStateContext {
     setGameState: (gameState: GameState) => void
 }
 
+const DEFAULT_PATH_TILES: Coordinates[] = [
+    { x: 0, z: 2 },
+    { x: 1, z: 2 },
+    { x: 1, z: 1 },
+    { x: 2, z: 1 },
+    { x: 3, z: 1 },
+    { x: 4, z: 1 },
+]
+
+const maxX = DEFAULT_PATH_TILES.reduce((max, tile) => Math.max(max, tile.x), 0);
+const maxZ = DEFAULT_PATH_TILES.reduce((max, tile) => Math.max(max, tile.z), 0);
+
 const DEFAULT_GAME_STATE: GameState = {
-    pathTiles: [
-        { x: 0, z: 2 },
-        { x: 1, z: 2 },
-        { x: 1, z: 1 },
-        { x: 2, z: 1 },
-        { x: 3, z: 1 },
-        { x: 4, z: 1 },
-    ],
+    pathTiles: DEFAULT_PATH_TILES,
+    maxX,
+    maxZ,
 }
 
 const gameStateContext = createContext<GameStateContext>({

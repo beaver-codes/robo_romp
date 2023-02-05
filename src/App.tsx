@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Canvas } from '@react-three/fiber';
+import "./App.css"
+import { Environment, OrbitControls } from '@react-three/drei'
+import Floor from './components/Floor';
 
-function App() {
+
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Canvas >
+      <Environment preset="studio" background />
+
+      <directionalLight position={[0, 10, 4]} intensity={1} />
+      <ambientLight intensity={0.1} />
+
+      <Floor />
+
+      <OrbitControls />
+      <gridHelper />
+      <axesHelper />
+    </Canvas>
   );
-}
+};
 
 export default App;

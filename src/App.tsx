@@ -4,8 +4,9 @@ import { Environment, OrbitControls } from '@react-three/drei'
 import Floor from './components/Floor';
 import Lights from './Lights';
 import DevHelpers from './DevHelpers';
-import { useGameState } from './contexts/GameStateContext';
+import { GameStateProvider, useGameState } from './contexts/GameStateContext';
 import Robot from './components/Robot';
+import Controls from './components/Controls';
 
 
 
@@ -15,16 +16,20 @@ const App = () => {
 
   const xCenter = maxX / 2;
   return (
-    <Canvas camera={{ position: [xCenter, 5, 5], }} shadows>
-      <Environment preset="studio" background />
+    <GameStateProvider>
 
-      <Lights />
-      <Robot />
-      <Floor />
+      <Canvas camera={{ position: [xCenter, 5, 5], }} shadows>
+        <Environment preset="studio" background />
 
-      <OrbitControls target={[xCenter, 0, 0]} />
-      <DevHelpers />
-    </Canvas>
+        <Lights />
+        <Robot />
+        <Floor />
+        <Controls location={{ x: 0, z: gameState.level.maxZ + 2 }} />
+
+        <OrbitControls target={[xCenter, 0, 0]} />
+        <DevHelpers />
+      </Canvas>
+    </GameStateProvider>
   );
 };
 

@@ -13,8 +13,8 @@ export default function Robot() {
     const { x, z } = gameState.robot.location;
 
     useFrame((_, delta) => {
-        if (groupRef.current) {
-            // groupRef.current.position.x += 0.1 * delta;
+        if (groupRef.current && gameState.masterState === 'running') {
+            groupRef.current.position.x += 0.4 * delta;
         }
     })
 

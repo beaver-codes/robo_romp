@@ -7,7 +7,9 @@ import DevHelpers from './DevHelpers';
 import { GameStateProvider, useGameState } from './contexts/GameStateContext';
 import Robot from './components/Robot';
 import Controls from './components/Controls';
-
+import HUD from './components/HUD';
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
 
 
 const App = () => {
@@ -29,6 +31,7 @@ const App = () => {
         <OrbitControls target={[xCenter, 0, 0]} />
         <DevHelpers />
       </Canvas>
+      <HUD />
     </GameStateProvider>
   );
 };

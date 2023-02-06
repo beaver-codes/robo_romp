@@ -26,7 +26,7 @@ const DEFAULT_GAME_STATE: GameState = {
         maxZ,
     },
     robot: {
-        location: DEFAULT_PATH_TILES[0],
+        forcedLocation: DEFAULT_PATH_TILES[0],
     },
     masterState: 'ready'
 }

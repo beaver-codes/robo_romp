@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { COLORS } from '../constants';
 import { useGameState } from '../contexts/GameStateContext';
 
@@ -10,7 +10,7 @@ const ROUND_HEIGHT = 0.5;
 export default function Robot() {
     const { gameState } = useGameState();
     const groupRef = useRef<THREE.Group>(null);
-    const { x, z } = gameState.robot.location;
+    const resetLocation = gameState.robot.forcedLocation;
 
     useFrame((_, delta) => {
         if (groupRef.current && gameState.masterState === 'running') {
@@ -18,8 +18,16 @@ export default function Robot() {
         }
     })
 
+    useEffect(() => {
+        if (groupRef.current) {
+            groupRef.current.position.x = resetLocation.x;
+            groupRef.current.position.z = resetLocation.z;
+        }
+    }, [resetLocation]);
+
+
     return (
-        <group position={[x, ROUND_HEIGHT + FLOOR_HEIGHT, z]} ref={groupRef}>
+        <group position={[resetLocation.x, ROUND_HEIGHT + FLOOR_HEIGHT, resetLocation.z]} ref={groupRef}>
 
             <mesh castShadow={true}>
                 <sphereGeometry args={[ROUND_HEIGHT]} />

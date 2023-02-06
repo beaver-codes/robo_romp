@@ -5,7 +5,7 @@ import PathTile from './PathTile';
 
 export default function Floor() {
     const { gameState } = useGameState();
-    const pathTiles = gameState.pathTiles;
+    const pathTiles = gameState.level.pathTiles;
 
 
     const tiles = useMemo(() => {

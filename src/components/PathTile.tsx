@@ -15,7 +15,7 @@ export default function PathTile(props: Props) {
 
     return (
         <>
-            <mesh position={[x, PATH_HEIGHT / 2 + BASE_HEIGHT, z]}>
+            <mesh position={[x, PATH_HEIGHT / 2 + BASE_HEIGHT, z]} castShadow={true} receiveShadow={true}>
                 <boxGeometry args={[PATH_SIZE, PATH_HEIGHT, PATH_SIZE]} />
                 <meshPhongMaterial color={COLORS.PATH_COLOR} />
             </mesh>

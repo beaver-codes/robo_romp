@@ -1,7 +1,8 @@
-import Coordinates from "./Coordinates";
+import Level from "./Level";
+import { RobotState } from "./RobotState";
 
 export default interface GameState {
-    pathTiles: Coordinates[]
-    maxX: number
-    maxZ: number
+    level: Level;
+    robot: RobotState;
 }
+

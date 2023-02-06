@@ -20,9 +20,15 @@ const maxX = DEFAULT_PATH_TILES.reduce((max, tile) => Math.max(max, tile.x), 0);
 const maxZ = DEFAULT_PATH_TILES.reduce((max, tile) => Math.max(max, tile.z), 0);
 
 const DEFAULT_GAME_STATE: GameState = {
-    pathTiles: DEFAULT_PATH_TILES,
-    maxX,
-    maxZ,
+    level: {
+
+        pathTiles: DEFAULT_PATH_TILES,
+        maxX,
+        maxZ,
+    },
+    robot: {
+        location: DEFAULT_PATH_TILES[0],
+    }
 }
 
 const gameStateContext = createContext<GameStateContext>({

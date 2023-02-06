@@ -12,7 +12,7 @@ export default function BaseTile(props: Props) {
     const { x, z } = props
 
     return (
-        <mesh position={[x, HEIGHT / 2, z]}>
+        <mesh position={[x, HEIGHT / 2, z]} receiveShadow>
             <boxGeometry args={[1, HEIGHT, 1]} />
             <meshPhongMaterial color={COLORS.BASE_COLOR} />
         </mesh>

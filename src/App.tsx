@@ -3,10 +3,9 @@ import "./App.css"
 import { Environment, OrbitControls } from '@react-three/drei'
 import Floor from './components/Floor';
 import Lights from './Lights';
-import DevHelpers from './DevHelpers';
 import { GameStateProvider, useGameState } from './contexts/GameStateContext';
 import Robot from './components/Robot';
-import Controls from './components/Controls';
+import Indicator from './components/Indicator';
 import HUD from './components/HUD';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
@@ -26,10 +25,10 @@ const App = () => {
         <Lights />
         <Robot />
         <Floor />
-        <Controls location={{ x: 0, z: gameState.level.maxZ + 2 }} />
+        <Indicator location={{ x: 0, z: gameState.level.maxZ + 2 }} />
 
         <OrbitControls target={[xCenter, 0, 0]} />
-        <DevHelpers />
+        {/* <DevHelpers /> */}
       </Canvas>
       <HUD />
     </GameStateProvider>

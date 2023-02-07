@@ -8,9 +8,9 @@ interface Props {
     location: Coordinates
 }
 
-export default function Controls(props: Props) {
+export default function Indicator(props: Props) {
     const { x, z } = props.location
-    const { gameState, setGameState } = useGameState();
+    const { gameState } = useGameState();
     const isRunning = gameState.masterState === 'running';
     const startRef = React.useRef<Mesh>(null);
 
@@ -20,34 +20,15 @@ export default function Controls(props: Props) {
         }
     })
 
-    const handleStart = () => {
-        setGameState({ ...gameState, masterState: isRunning ? 'ready' : 'running' });
-    }
-
-    const handleRestart = () => {
-        setGameState({
-            ...gameState,
-            masterState: 'ready',
-            robot: { forcedLocation: { ...gameState.level.pathTiles[0] } }
-        });
-    }
-
     return (
         <group position={[x - 0.25, 0.25, z]}>
             <mesh
                 ref={startRef}
-                onClick={handleStart}
             >
                 <boxGeometry args={[0.5, 0.5, 0.5]} />
                 <meshPhongMaterial color={isRunning ? "orange" : 'green'} />
             </mesh>
-            <mesh
-                position={[0.9, 0, 0]}
-                onClick={handleRestart}
-            >
-                <boxGeometry args={[0.5, 0.5, 0.5]} />
-                <meshPhongMaterial color={'red'} />
-            </mesh>
+
         </group>
     )
 }

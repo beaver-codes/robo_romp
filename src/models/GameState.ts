@@ -1,11 +1,15 @@
+import Coordinates from "./Coordinates";
+import Instruction from "./Instruction";
 import Level from "./Level";
-import { RobotState } from "./RobotState";
 
 
 export type MasterState = 'ready' | 'running';
 export default interface GameState {
     level: Level;
-    robot: RobotState;
+    forcedLocation: Coordinates;
     masterState: MasterState;
+
+    instructionPointer: number
+    instructions: Instruction[];
 }
 

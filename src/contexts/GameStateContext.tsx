@@ -25,10 +25,10 @@ const DEFAULT_GAME_STATE: GameState = {
         maxX,
         maxZ,
     },
-    robot: {
-        forcedLocation: DEFAULT_PATH_TILES[0],
-    },
-    masterState: 'ready'
+    forcedLocation: DEFAULT_PATH_TILES[0],
+    masterState: 'ready',
+    instructionPointer: 0,
+    instructions: []
 }
 
 const gameStateContext = createContext<GameStateContext>({

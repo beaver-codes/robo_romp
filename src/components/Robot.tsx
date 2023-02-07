@@ -10,7 +10,7 @@ const ROUND_HEIGHT = 0.5;
 export default function Robot() {
     const { gameState } = useGameState();
     const groupRef = useRef<THREE.Group>(null);
-    const resetLocation = gameState.robot.forcedLocation;
+    const resetLocation = gameState.forcedLocation;
 
     useFrame((_, delta) => {
         if (groupRef.current && gameState.masterState === 'running') {

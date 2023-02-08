@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { COLORS, INSTRUCTION_ICONS } from '../constants'
 import { useGameState } from '../contexts/GameStateContext';
+import GameState from '../models/GameState';
 import { InstructionType } from '../models/Instruction';
 import { generateNewInstruction, updateTargets } from '../utils/control';
 
@@ -10,19 +11,50 @@ export default function HUD() {
 
     const { gameState, setGameState } = useGameState();
     const isRunning = gameState.masterState === 'running';
+    const instructionPointer = gameState.instructionPointer;
+    useEffect(() => {
+        if (instructionPointer > 0) {
+            const reachedLocation = gameState.instructions[instructionPointer - 1].target.location;
+            const finish = gameState.level.pathTiles[gameState.level.pathTiles.length - 1];
+            if (reachedLocation.x === finish.x && reachedLocation.z === finish.z) {
+                setGameState({ ...gameState, masterState: 'finished' });
+                return;
+            }
+        }
+        if (instructionPointer >= gameState.instructions.length) {
+            setGameState({ ...gameState, masterState: 'stopped' });
+            return;
+        }
+        if (!gameState.instructions[instructionPointer].target.valid) {
+            setGameState({ ...gameState, masterState: 'stopped' });
+            return;
+        }
+        // eslint-disable-next-line
+    }, [instructionPointer])
 
-    const handleStart = () => {
-        setGameState({ ...gameState, masterState: isRunning ? 'ready' : 'running' });
-    }
 
-    const handleRestart = () => {
-        setGameState({
+    const getRestartState = (): GameState => {
+        return {
             ...gameState,
             masterState: 'ready',
             forcedLocation: { ...gameState.level.pathTiles[0] },
             forcedDirection: 'E',
             instructionPointer: 0,
-        });
+        }
+    }
+
+    const handleStart = () => {
+        if (gameState.masterState === 'stopped' || gameState.masterState === 'finished') {
+            const newGameState = getRestartState();
+            setGameState(newGameState)
+            return;
+        }
+
+        setGameState({ ...gameState, masterState: isRunning ? 'paused' : 'running' });
+    }
+
+    const handleRestart = () => {
+        setGameState(getRestartState());
     }
 
     const addInstruction = (instructionType: InstructionType) => {
@@ -43,6 +75,8 @@ export default function HUD() {
             instructions: newInstructions
         });
     }
+
+    const disbaleInstructionChange = gameState.masterState !== 'ready';
 
     return (
         <div className='hud ' style={{
@@ -75,6 +109,7 @@ export default function HUD() {
                             <button className="btn btn-outline-primary"
                                 key={instructionType}
                                 onClick={() => addInstruction(instructionType)}
+                                disabled={disbaleInstructionChange}
                             >
                                 <i className={`bi ${INSTRUCTION_ICONS[instructionType]}`} />
                             </button>
@@ -104,6 +139,8 @@ export default function HUD() {
                         <div key={index} className={classes}>
                             <button className="btn btn-primary"
                                 onClick={() => removeInstruction(index)}
+
+                                disabled={disbaleInstructionChange}
                             >
                                 <i className={`bi ${INSTRUCTION_ICONS[instruction.type]}`} />
                             </button>

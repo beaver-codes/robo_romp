@@ -3,7 +3,7 @@ import Instruction from "./Instruction";
 import Level from "./Level";
 
 
-export type MasterState = 'ready' | 'running';
+export type MasterState = 'ready' | 'running' | 'paused' | 'stopped' | 'finished';
 
 export type Direction = 'N' | 'E' | 'S' | 'W';
 

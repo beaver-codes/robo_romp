@@ -1,12 +1,8 @@
-import Coordinates from "./Coordinates";
-import { Direction } from "./GameState";
+import { InstructionTarget } from "./InstructionTarget";
 
 export type InstructionType = 'go' | 'turnLeft' | 'turnRight';
 
 export default interface Instruction {
     type: InstructionType;
-    target: {
-        location: Coordinates
-        direction: Direction
-    }
+    target: InstructionTarget
 }

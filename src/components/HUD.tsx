@@ -2,7 +2,7 @@ import React from 'react'
 import { COLORS, INSTRUCTION_ICONS } from '../constants'
 import { useGameState } from '../contexts/GameStateContext';
 import { InstructionType } from '../models/Instruction';
-import { generateNewInstruction } from '../utils/control';
+import { generateNewInstruction, updateTargets } from '../utils/control';
 
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
 
@@ -20,7 +20,7 @@ export default function HUD() {
             ...gameState,
             masterState: 'ready',
             forcedLocation: { ...gameState.level.pathTiles[0] },
-            forcedDirection: 'N',
+            forcedDirection: 'E',
             instructionPointer: 0,
         });
     }
@@ -29,6 +29,18 @@ export default function HUD() {
         setGameState({
             ...gameState,
             instructions: [...gameState.instructions, generateNewInstruction(gameState, instructionType)]
+        });
+    }
+
+    const removeInstruction = (index: number) => {
+        const newInstructions = [...gameState.instructions];
+        newInstructions.splice(index, 1);
+
+        updateTargets(gameState, newInstructions);
+
+        setGameState({
+            ...gameState,
+            instructions: newInstructions
         });
     }
 
@@ -87,7 +99,7 @@ export default function HUD() {
                     return (
                         <div key={index} className={classes}>
                             <button className="btn btn-primary"
-
+                                onClick={() => removeInstruction(index)}
                             >
                                 <i className={`bi ${INSTRUCTION_ICONS[instruction.type]}`} />
                             </button>

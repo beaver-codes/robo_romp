@@ -27,6 +27,7 @@ export default function Robot() {
         if (groupRef.current) {
             groupRef.current.position.x = resetLocation.x;
             groupRef.current.position.z = resetLocation.z;
+            groupRef.current.rotation.y = 0;
         }
     }, [resetLocation]);
 

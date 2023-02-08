@@ -1,6 +1,7 @@
 import { Group } from "three";
 import GameState, { Direction } from "../models/GameState";
 import Instruction, { InstructionType } from "../models/Instruction";
+import { InstructionTarget } from "../models/InstructionTarget";
 
 const MOVEMENT_SPEED = 1;
 const TURNING_SPEED = 1.5;
@@ -29,22 +30,33 @@ export const generateNewInstruction = (gameState: GameState, instructionType: In
         currentDirection = lastInstruction.target?.direction || currentDirection;
     }
 
+    newInstruction.target = _adjustTarget({ location: currentCoordinates, direction: currentDirection }, instructionType);
+
+    return newInstruction
+}
+
+const _adjustTarget = (startTarget: InstructionTarget, instructionType: InstructionType): InstructionTarget => {
+    const newTarget: InstructionTarget = {
+        location: { ...startTarget.location },
+        direction: startTarget.direction
+    }
+
     switch (instructionType) {
         case 'go':
-            newInstruction.target.location.x = currentCoordinates.x + (currentDirection === 'E' ? 1 : currentDirection === 'W' ? -1 : 0);
-            newInstruction.target.location.z = currentCoordinates.z + (currentDirection === 'S' ? 1 : currentDirection === 'N' ? -1 : 0);
-            newInstruction.target.direction = currentDirection;
+            newTarget.location.x = startTarget.location.x + (startTarget.direction === 'E' ? 1 : startTarget.direction === 'W' ? -1 : 0);
+            newTarget.location.z = startTarget.location.z + (startTarget.direction === 'S' ? 1 : startTarget.direction === 'N' ? -1 : 0);
+            newTarget.direction = startTarget.direction;
             break;
         case 'turnLeft':
         case 'turnRight':
-            newInstruction.target.location = { ...currentCoordinates };
-            newInstruction.target.direction = instructionType === 'turnLeft' ? _turnLeft(currentDirection) : _turnRight(currentDirection);
+            newTarget.location = { ...startTarget.location };
+            newTarget.direction = instructionType === 'turnLeft' ? _turnLeft(startTarget.direction) : _turnRight(startTarget.direction);
             break;
         default:
             console.error(`Unknown instruction type: ${instructionType}`)
 
     }
-    return newInstruction
+    return newTarget;
 }
 
 const _turnLeft = (direction: Direction): Direction => {
@@ -143,4 +155,15 @@ export const adjustRobotTurn = (gameState: GameState, currentInstruction: Instru
         robotRef.rotation.y = newRotation;
     }
     return false;
+}
+
+export const updateTargets = (gameState: GameState, instructions: Instruction[]): void => {
+    let currentTarget: InstructionTarget = {
+        location: { ...gameState.forcedLocation },
+        direction: gameState.forcedDirection
+    }
+    for (const instruction of instructions) {
+        instruction.target = _adjustTarget(currentTarget, instruction.type);
+        currentTarget = instruction.target;
+    }
 }

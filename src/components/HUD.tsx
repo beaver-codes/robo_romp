@@ -1,26 +1,34 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { COLORS, INSTRUCTION_ICONS } from '../constants'
 import { useGameState } from '../contexts/GameStateContext';
 import GameState from '../models/GameState';
 import { InstructionType } from '../models/Instruction';
 import { generateNewInstruction, updateTargets } from '../utils/control';
+import FinishModal from './FinishModal';
 
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
 
 export default function HUD() {
-
     const { gameState, setGameState } = useGameState();
+    const [showFinishModal, setShowFinishModal] = useState(false);
     const isRunning = gameState.masterState === 'running';
     const instructionPointer = gameState.instructionPointer;
+
+
     useEffect(() => {
         if (instructionPointer > 0) {
             const reachedLocation = gameState.instructions[instructionPointer - 1].target.location;
             const finish = gameState.level.pathTiles[gameState.level.pathTiles.length - 1];
             if (reachedLocation.x === finish.x && reachedLocation.z === finish.z) {
                 setGameState({ ...gameState, masterState: 'finished' });
+                setShowFinishModal(true);
                 return;
             }
         }
+        if (!gameState.instructions.length) {
+            return;
+        }
+
         if (instructionPointer >= gameState.instructions.length) {
             setGameState({ ...gameState, masterState: 'stopped' });
             return;
@@ -32,6 +40,14 @@ export default function HUD() {
         // eslint-disable-next-line
     }, [instructionPointer])
 
+
+    const onFinished = () => {
+        const newGameState = getRestartState();
+        newGameState.instructions = [];
+        setGameState(newGameState);
+
+        setShowFinishModal(false);
+    }
 
     const getRestartState = (): GameState => {
         return {
@@ -153,6 +169,8 @@ export default function HUD() {
                     </button>
                 </div>
             </div>
+
+            <FinishModal show={showFinishModal} onHide={onFinished} />
         </div >
     )
 }

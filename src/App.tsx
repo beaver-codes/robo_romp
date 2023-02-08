@@ -9,11 +9,21 @@ import Indicator from './components/Indicator';
 import HUD from './components/HUD';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
+import { useEffect } from 'react';
+import { playSound } from './utils/sounds';
 
 
 const App = () => {
   const { gameState } = useGameState();
   const maxX = gameState.level.maxX;
+
+  useEffect(() => {
+    const startMusic = () => {
+      playSound('ambient', { loop: true, volume: 0.03 });
+      document.getElementById('root')?.removeEventListener('click', startMusic);
+    }
+    document.getElementById('root')?.addEventListener('click', startMusic);
+  }, [])
 
   const xCenter = maxX / 2;
   return (

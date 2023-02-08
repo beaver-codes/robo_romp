@@ -4,6 +4,7 @@ import { useGameState } from '../contexts/GameStateContext';
 import GameState from '../models/GameState';
 import { InstructionType } from '../models/Instruction';
 import { generateNewInstruction, updateTargets } from '../utils/control';
+import { playSound } from '../utils/sounds';
 import FinishModal from './FinishModal';
 
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
@@ -36,6 +37,10 @@ export default function HUD() {
         if (!gameState.instructions[instructionPointer].target.valid) {
             setGameState({ ...gameState, masterState: 'stopped' });
             return;
+        }
+
+        if (instructionPointer) {
+            playSound('ack', { volume: 0.5 });
         }
         // eslint-disable-next-line
     }, [instructionPointer])

@@ -1,4 +1,5 @@
 import { Group } from "three";
+import Coordinates from "../models/Coordinates";
 import GameState, { Direction } from "../models/GameState";
 import Instruction, { InstructionType } from "../models/Instruction";
 import { InstructionTarget } from "../models/InstructionTarget";
@@ -18,7 +19,8 @@ export const generateNewInstruction = (gameState: GameState, instructionType: In
         type: instructionType,
         target: {
             location: { x: 0, z: 0 },
-            direction: 'N'
+            direction: 'N',
+            valid: true
         }
     }
 
@@ -30,15 +32,21 @@ export const generateNewInstruction = (gameState: GameState, instructionType: In
         currentDirection = lastInstruction.target?.direction || currentDirection;
     }
 
-    newInstruction.target = _adjustTarget({ location: currentCoordinates, direction: currentDirection }, instructionType);
+    newInstruction.target = _adjustTarget({ location: currentCoordinates, direction: currentDirection, valid: true }, instructionType);
+    newInstruction.target.valid = _isLocationPath(newInstruction.target.location, gameState);
 
     return newInstruction
+}
+
+const _isLocationPath = (location: Coordinates, gameState: GameState): boolean => {
+    return gameState.level.pathTiles.some((pathLocation) => pathLocation.x === location.x && pathLocation.z === location.z);
 }
 
 const _adjustTarget = (startTarget: InstructionTarget, instructionType: InstructionType): InstructionTarget => {
     const newTarget: InstructionTarget = {
         location: { ...startTarget.location },
-        direction: startTarget.direction
+        direction: startTarget.direction,
+        valid: true
     }
 
     switch (instructionType) {
@@ -96,6 +104,10 @@ export const adjustRobot = (gameState: GameState, robotRef: Group, delta: number
         return false;
     }
     const currentInstruction = gameState.instructions[gameState.instructionPointer];
+
+    if (!currentInstruction.target.valid) {
+        return false;
+    }
 
     if (currentInstruction.type === 'go') {
         return adjustRobotGo(gameState, currentInstruction, robotRef, delta);
@@ -160,10 +172,12 @@ export const adjustRobotTurn = (gameState: GameState, currentInstruction: Instru
 export const updateTargets = (gameState: GameState, instructions: Instruction[]): void => {
     let currentTarget: InstructionTarget = {
         location: { ...gameState.forcedLocation },
-        direction: gameState.forcedDirection
+        direction: gameState.forcedDirection,
+        valid: true
     }
     for (const instruction of instructions) {
         instruction.target = _adjustTarget(currentTarget, instruction.type);
+        instruction.target.valid = _isLocationPath(instruction.target.location, gameState);
         currentTarget = instruction.target;
     }
 }

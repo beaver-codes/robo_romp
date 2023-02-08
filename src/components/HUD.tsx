@@ -93,7 +93,11 @@ export default function HUD() {
                         classes += ' bg-success';
                     }
                     if (index === gameState.instructionPointer) {
-                        classes += ' bg-warning';
+                        if (instruction.target.valid) {
+                            classes += ' bg-warning';
+                        } else {
+                            classes += ' bg-danger';
+                        }
                     }
 
                     return (

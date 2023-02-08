@@ -1,7 +1,8 @@
 import React from 'react'
 import { COLORS, INSTRUCTION_ICONS } from '../constants'
 import { useGameState } from '../contexts/GameStateContext';
-import Instruction, { InstructionType } from '../models/Instruction';
+import { InstructionType } from '../models/Instruction';
+import { generateNewInstruction } from '../utils/control';
 
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
 
@@ -19,22 +20,17 @@ export default function HUD() {
             ...gameState,
             masterState: 'ready',
             forcedLocation: { ...gameState.level.pathTiles[0] },
+            forcedDirection: 'N',
             instructionPointer: 0,
         });
     }
 
     const addInstruction = (instructionType: InstructionType) => {
-        const newInstruction: Instruction = {
-            type: instructionType,
-
-        }
-
         setGameState({
             ...gameState,
-            instructions: [...gameState.instructions, newInstruction]
+            instructions: [...gameState.instructions, generateNewInstruction(gameState, instructionType)]
         });
     }
-
 
     return (
         <div className='hud ' style={{
@@ -76,17 +72,33 @@ export default function HUD() {
             </div>
 
 
-            <div className='p-3 pt-4'>
+            <div className='p-3 pt-4 d-flex'>
 
                 {gameState.instructions.map((instruction, index) => {
+                    const processed = index < gameState.instructionPointer;
+                    let classes = 'mt-2  p-2';
+                    if (processed) {
+                        classes += ' bg-success';
+                    }
+                    if (index === gameState.instructionPointer) {
+                        classes += ' bg-warning';
+                    }
 
-                    return (<button key={index} className="mt-2 mx-1 btn btn-primary">
-                        <i className={`bi ${INSTRUCTION_ICONS[instruction.type]}`} />
-                    </button>)
+                    return (
+                        <div key={index} className={classes}>
+                            <button className="btn btn-primary"
+
+                            >
+                                <i className={`bi ${INSTRUCTION_ICONS[instruction.type]}`} />
+                            </button>
+                        </div>)
                 })}
-                <button className='btn btn-outline-dark mt-2 mx-1' disabled={true}>
-                    <i className={`bi bi-plus`} />
-                </button>
+                <div className='mt-2 p-1'>
+
+                    <button className='btn btn-outline-dark ' disabled={true}>
+                        <i className={`bi bi-plus`} />
+                    </button>
+                </div>
             </div>
         </div >
     )

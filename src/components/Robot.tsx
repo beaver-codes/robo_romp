@@ -2,19 +2,24 @@ import { useFrame } from '@react-three/fiber';
 import React, { useEffect, useRef } from 'react'
 import { COLORS } from '../constants';
 import { useGameState } from '../contexts/GameStateContext';
+import { adjustRobot } from '../utils/control';
 
 const FLOOR_HEIGHT = 0.4;
 const ROUND_HEIGHT = 0.5;
 
 
 export default function Robot() {
-    const { gameState } = useGameState();
+    const { gameState, setGameState } = useGameState();
     const groupRef = useRef<THREE.Group>(null);
     const resetLocation = gameState.forcedLocation;
 
     useFrame((_, delta) => {
         if (groupRef.current && gameState.masterState === 'running') {
-            groupRef.current.position.x += 0.4 * delta;
+            const finished = adjustRobot(gameState, groupRef.current, delta);
+
+            if (finished) {
+                setGameState({ ...gameState, instructionPointer: gameState.instructionPointer + 1 });
+            }
         }
     })
 

@@ -26,6 +26,7 @@ const DEFAULT_GAME_STATE: GameState = {
         maxZ,
     },
     forcedLocation: DEFAULT_PATH_TILES[0],
+    forcedDirection: 'E',
     masterState: 'ready',
     instructionPointer: 0,
     instructions: []

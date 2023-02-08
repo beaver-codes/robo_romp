@@ -109,7 +109,7 @@ export default function HUD() {
                         background: COLORS.BASE_COLOR,
                     }}>
                     <button
-                        className={`btn btn-${isRunning ? 'warning' : 'success'}`}
+                        className={`btn btn-lg btn-${isRunning ? 'warning' : 'success'}`}
                         onClick={handleStart}>
                         <i className={`bi ${isRunning ? 'bi-pause-fill' : 'bi-play-fill'}`} />
                     </button>
@@ -122,7 +122,7 @@ export default function HUD() {
                 <div className='p-2'>
                     <div className="btn-group">
                         {instructionsToPick.map(instructionType =>
-                            <button className="btn btn-outline-primary"
+                            <button className="btn btn-outline-primary btn-lg "
                                 key={instructionType}
                                 onClick={() => addInstruction(instructionType)}
                                 disabled={disbaleInstructionChange}

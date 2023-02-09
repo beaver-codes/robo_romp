@@ -22,6 +22,7 @@ export default function HUD() {
             const finish = gameState.level.pathTiles[gameState.level.pathTiles.length - 1];
             if (reachedLocation.x === finish.x && reachedLocation.z === finish.z) {
                 setGameState({ ...gameState, masterState: 'finished' });
+                playSound('obstacle', { volume: 0.4 })
                 setShowFinishModal(true);
                 return;
             }
@@ -32,10 +33,12 @@ export default function HUD() {
 
         if (instructionPointer >= gameState.instructions.length) {
             setGameState({ ...gameState, masterState: 'stopped' });
+            playSound('obstacle', { volume: 0.4 })
             return;
         }
         if (!gameState.instructions[instructionPointer].target.valid) {
             setGameState({ ...gameState, masterState: 'stopped' });
+            playSound('obstacle', { volume: 0.4 })
             return;
         }
 

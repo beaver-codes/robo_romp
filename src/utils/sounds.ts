@@ -1,17 +1,17 @@
 
 // @ts-ignore
-import ack from "../sounds/ack.ogg";
+import obstacle from "../sounds/obstacle.ogg";
 // @ts-ignore
 import ambient from "../sounds/ambient.ogg";
 // @ts-ignore
 import move from "../sounds/move.ogg";
 
 
-type SoundType = 'ack' | 'ambient' | 'move';
+type SoundType = 'obstacle' | 'ambient' | 'move';
 
 
 const SOUNDS: Record<SoundType, HTMLAudioElement> = {
-    ack: new Audio(ack),
+    obstacle: new Audio(obstacle),
     ambient: new Audio(ambient),
     move: new Audio(move),
 }

@@ -4,7 +4,7 @@ import { useGameState } from '../contexts/GameStateContext';
 import GameState from '../models/GameState';
 import { InstructionType } from '../models/Instruction';
 import { generateNewInstruction, updateTargets } from '../utils/control';
-import { playSound } from '../utils/sounds';
+import { playSound, stopSound } from '../utils/sounds';
 import FinishModal from './FinishModal';
 
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
@@ -39,11 +39,16 @@ export default function HUD() {
             return;
         }
 
-        if (instructionPointer) {
-            playSound('ack', { volume: 0.5 });
-        }
         // eslint-disable-next-line
     }, [instructionPointer])
+
+    useEffect(() => {
+        if (gameState.masterState === 'running') {
+            playSound('move', { loop: true, volume: 0.6 });
+        } else {
+            stopSound('move');
+        }
+    }, [gameState.masterState]);
 
 
     const onFinished = () => {
@@ -65,6 +70,10 @@ export default function HUD() {
     }
 
     const handleStart = () => {
+        if (gameState.instructions.length === 0) {
+            return;
+        }
+
         if (gameState.masterState === 'stopped' || gameState.masterState === 'finished') {
             const newGameState = getRestartState();
             setGameState(newGameState)
@@ -127,7 +136,7 @@ export default function HUD() {
                 <div className='p-2'>
                     <div className="btn-group">
                         {instructionsToPick.map(instructionType =>
-                            <button className="btn btn-outline-primary btn-lg "
+                            <button className="btn btn-primary btn-lg "
                                 key={instructionType}
                                 onClick={() => addInstruction(instructionType)}
                                 disabled={disbaleInstructionChange}
@@ -144,7 +153,7 @@ export default function HUD() {
 
                 {gameState.instructions.map((instruction, index) => {
                     const processed = index < gameState.instructionPointer;
-                    let classes = 'mt-2  p-2';
+                    let classes = 'mt-2 p-2';
                     if (processed) {
                         classes += ' bg-success';
                     }
@@ -158,21 +167,21 @@ export default function HUD() {
 
                     return (
                         <div key={index} className={classes}>
-                            <button className="btn btn-primary"
+                            <button className="btn btn-outline-primary"
                                 onClick={() => removeInstruction(index)}
-
+                                style={{ background: COLORS.PATH_COLOR }}
                                 disabled={disbaleInstructionChange}
                             >
                                 <i className={`bi ${INSTRUCTION_ICONS[instruction.type]}`} />
                             </button>
                         </div>)
                 })}
-                <div className='mt-2 p-1'>
+                {gameState.instructions.length === 0 && <div className='mt-2 p-2'>
 
                     <button className='btn btn-outline-dark ' disabled={true}>
-                        <i className={`bi bi-plus`} />
+                        <i className={`bi bi-patch-question-fill`} />
                     </button>
-                </div>
+                </div>}
             </div>
 
             <FinishModal show={showFinishModal} onHide={onFinished} />

@@ -9,8 +9,8 @@ export default function Floor() {
 
 
     const tiles = useMemo(() => {
-        const maxX = 5;
-        const maxZ = 4;
+        const maxX = gameState.level.maxX + 1;
+        const maxZ = gameState.level.maxZ + 1;
 
         const _tiles: JSX.Element[] = []
         for (let x = 0; x < maxX; x++) {
@@ -25,7 +25,7 @@ export default function Floor() {
             }
         }
         return _tiles;
-    }, [pathTiles])
+    }, [pathTiles, gameState.level])
 
 
 

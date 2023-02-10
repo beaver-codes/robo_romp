@@ -10,7 +10,7 @@ import FinishModal from './FinishModal';
 const instructionsToPick: InstructionType[] = ['turnLeft', 'go', 'turnRight'];
 
 export default function HUD() {
-    const { gameState, setGameState } = useGameState();
+    const { gameState, setGameState, changeLevel } = useGameState();
     const [showFinishModal, setShowFinishModal] = useState(false);
     const isRunning = gameState.masterState === 'running';
     const instructionPointer = gameState.instructionPointer;
@@ -57,7 +57,7 @@ export default function HUD() {
     const onFinished = () => {
         const newGameState = getRestartState();
         newGameState.instructions = [];
-        setGameState(newGameState);
+        changeLevel(newGameState);
 
         setShowFinishModal(false);
     }
